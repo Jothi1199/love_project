@@ -11,7 +11,7 @@ export default function Home() {
 
   const handleUnlock = () => {
     if (password === correctPassword) {
-      router.push("/love")
+      router.push("/letter")
     } else {
       alert("Wrong password ❤️ Try again")
     }

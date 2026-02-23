@@ -9,7 +9,7 @@ import os
 import numpy as np
 from moviepy.editor import *
 from moviepy.video.fx.all import fadein, fadeout
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageOps
 from moviepy.editor import ImageClip
 
 IMAGE_DURATION = 5
@@ -30,7 +30,7 @@ def create_section(folder):
                 .fx(fadeout, 1.5)
             clips.append(clip)
     return clips
-'''
+
 def create_section(folder):
     clips = []
     for img in sorted(os.listdir(folder)):
@@ -54,6 +54,40 @@ def create_section(folder):
 
     return clips
 
+'''
+def create_section(folder):
+    clips = []
+
+    for img in sorted(os.listdir(folder)):
+        if img.lower().endswith((".jpg", ".png", ".jpeg")):
+
+            img_path = os.path.join(folder, img)
+
+            # 🔧 FIX ROTATION USING EXIF DATA
+            pil_img = Image.open(img_path)
+            pil_img = ImageOps.exif_transpose(pil_img)  # <-- Fix rotation
+
+            np_img = np.array(pil_img)
+
+            # Create clip from corrected image
+            clip = ImageClip(np_img)
+
+            # Resize to fit inside 1280x720
+            clip = clip.resize(height=720)
+
+            # Black background
+            background = ColorClip((1280, 720), color=(0, 0, 0)).set_duration(5)
+
+            clip = clip.set_position("center").set_duration(5)
+
+            final = CompositeVideoClip([background, clip])
+
+            # Soft zoom
+            final = final.resize(lambda t: 1 + 0.02 * t)
+
+            clips.append(final.fadein(1).fadeout(1))
+
+    return clips
 
 def text_clip(text, duration=5):
     W, H = 1280, 720
@@ -99,8 +133,8 @@ ending = text_clip("From 2016... to forever.\nI would choose you.\nAgain. And ag
 
 # Combine all
 
-all_clips = [intro] + college + couple + marriage + [marriage_text] + baby + [baby_text] + [ending]
-
+#all_clips = [intro] + college + couple  + [marriage_text] + marriage + [baby_text] + baby  + [ending]
+all_clips= [intro]
 final_video = concatenate_videoclips(all_clips, method="compose")
 
 # Add music
@@ -109,4 +143,4 @@ audio = audio.subclip(0, final_video.duration)
 final_video = final_video.set_audio(audio)
 
 # Export
-final_video.write_videofile("Cinematic_Love_Trailer.mp4", fps=24)
+final_video.write_videofile("one.mp4", fps=24)
