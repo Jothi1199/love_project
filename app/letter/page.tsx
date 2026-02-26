@@ -119,7 +119,8 @@ my forever. ❤️
     <div className="max-w-xl bg-white p-8 shadow-2xl rounded-xl text-center">
 
       {/* Main Letter */}
-      <pre className="whitespace-pre-wrap font-serif text-lg">
+      <pre className="whitespace-pre-wrap font-serif text-lg text-purple-700">
+
         {main}
       </pre>
 
