@@ -41,7 +41,7 @@ export default function Letter() {
 
         </div>
       ) : (
-        <TypewriterLetter router={router} />
+        <TypewriterLetter />
       )}
 
     </div>
@@ -51,8 +51,8 @@ export default function Letter() {
 
 /* ================= Letter Component ================= */
 
-function TypewriterLetter({ router }) {
-
+function TypewriterLetter() {
+  const router = useRouter();
   const mainText = `My Love,
 
 From the first moment to now,
